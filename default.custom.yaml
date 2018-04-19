@@ -1,0 +1,7 @@
+patch:
+    "ascii_composer/switch_key/Shift_L": noop
+    "ascii_composer/switch_key/Shift_R": noop
+
+    schema_list:
+        - schema: myliu
+        - schema: bopomofo

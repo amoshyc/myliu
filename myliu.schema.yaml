@@ -1,0 +1,83 @@
+# Rime schema
+# encoding: utf-8
+# 嘸蝦米輸入法（中文模式）
+schema:
+  name: 嘸蝦米
+  schema_id: myliu
+  version: 0.1
+  author:
+    - "發明人 劉重次"
+  description: 嘸蝦米
+  dependencies:
+    - bopomofo
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: ["中文", "英數"]
+  - name: full_shape
+    states: ["半形", "全形"]
+  - name: simplification
+    states: ["繁體", "打繁出簡"]
+  - name: ascii_punct
+    reset: 0
+    states: ["標點", "符號"]
+
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - punctuator
+    - speller
+    - selector
+    - express_editor
+  segmentors:
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    # - echo_translator
+    - punct_translator
+    - table_translator
+  filters:
+    - simplifier
+    - uniquifier
+
+menu:
+  page_size: 5
+  alternative_select_keys: "0123456789"
+
+speller:
+  alphabet: "abcdefghijklmnopqrstuvwxyz,.'[]"
+  max_code_length: 5
+  auto_select: false
+
+translator:
+  dictionary: myliu
+  enable_charset_filter: true
+  enable_encoder: false
+  enable_commit_history: false
+  enable_completion: false # 不提示後續按鍵的組字結果
+  enable_sentence: false # 關閉連打組句。若要啟動的話需要打開 speller/delimiter 及 enable_user_dict
+  enable_user_dict: false # 取消使用者字頻調整機制。若打開的話則無法維持候選字順序。
+  preedit_format:
+    - "xlit|abcdefghijklmnopqrstuvwxyz,.'[]|ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ，．’〔〕"
+
+key_binder:
+  bindings:
+    - { when: always, accept: Shift+space, toggle: full_shape }
+    - { when: always, accept: Control+Shift+4, toggle: simplification }
+    - { when: has_menu, accept: space, send: space }
+    - { when: composing, accept: space, send: Escape }
+    - when:   has_menu  # 只要有候選字即滿足條件
+      accept: period
+      send:   period
+
+punctuator:
+  import_preset: default
+
+recognizer:
+  import_preset: default
